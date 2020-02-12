@@ -1,0 +1,30 @@
+{
+  "name": "epubit-ebook-download",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanwei43/epubit-ebook-download.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alanwei43/epubit-ebook-download/issues"
+  },
+  "homepage": "https://github.com/alanwei43/epubit-ebook-download#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "ts-node": "^7.0.1",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.2.4"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
