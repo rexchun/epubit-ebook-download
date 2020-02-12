@@ -35,7 +35,7 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
     if (/^第\d+章 /.test(fileName)) {
         fileName = fileName.replace(/^第(\d+)章 (.+)/, "$1 第$1章 $2");
     }
-    const filePath = path.join(CONFIG.BASE_DIR_HTML, fileName + ".html");
+    const filePath = path.join(CONFIG.BASE_DIR_HTML, `${fileName}.html`);
     let html = response.data.contents.map(content => {
         if (content.type === "singleImg") {
             return `<img src="../res/${content.editingContent}" style="width: 100%" />`
@@ -46,6 +46,8 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
         console.warn("invalid type: " + content.type);
         return `<p>invalid type: ${content.type}</p>`;
     }).join(`<br class="split" />\n`);
+
+    html += `\n\r\n<p class="epubit-contents-id" style="display: none">${JSON.stringify({ parentId: response.data.folder.parentId, id: response.data.folder.id })}</p>`;
 
     const imageContents = response.data.contents.filter(content => content.showUrls && content.showUrls.length);
     for (let content of imageContents) {
