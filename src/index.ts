@@ -36,7 +36,7 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
         fileName = fileName.replace(/^第(\d+)章 (.+)/, "$1 第$1章 $2");
     }
     const filePath = path.join(CONFIG.BASE_DIR_HTML, fileName + ".html");
-    const html = response.data.contents.map(content => {
+    let html = response.data.contents.map(content => {
         if (content.type === "singleImg") {
             return `<img src="../res/${content.editingContent}" style="width: 100%" />`
         }
@@ -57,17 +57,15 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
 }
 
 async function saveCategory(category: Category) {
-    const results = [];
     logger.debug(`${category.name} > 准备下载`);
     const content = await DownloadContent(CONFIG, category.id);
     saveToHtml(content)
     logger.debug(`${category.name} > 下载完成`);
-    results.push(content);
-    await delay(5 * 1000);
+    await delay(3 * 1000);
     await promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`), JSON.stringify(content));
     if (category.children && category.children.length) {
-        const childContents = await Promise.all(category.children.map(child => saveCategory(child)));
-        childContents.forEach(c => results.push(c));
+        for (let child of category.children) {
+            await saveCategory(child);
+        }
     }
-    return results;
 }
