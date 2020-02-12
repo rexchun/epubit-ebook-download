@@ -30,7 +30,7 @@ let logger = new Log(CONFIG.projectId);
 })();
 
 
-async function saveToHtml(response: ResponseResult<{ contents: Content[], folder: Category }>) {
+async function saveToHtml(response: ResponseResult<{ contents: Content[], folder: Category }>): Promise<void> {
     let fileName = response.data.folder.name.replace(/[\/\?\*&!@#$]/g, "_");
     if (/^第\d+章 /.test(fileName)) {
         fileName = fileName.replace(/^第(\d+)章 (.+)/, "$1 第$1章 $2");
@@ -47,11 +47,12 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
         return `<p>invalid type: ${content.type}</p>`;
     }).join(`<br class="split" />\n`);
 
-    response.data.contents.filter(content => content.showUrls && content.showUrls.length).forEach(content => {
-        DownloadImages(CONFIG.BASE_DIR_RES, content.showUrls.map(item => item.showUrl));
-    });
+    const imageContents = response.data.contents.filter(content => content.showUrls && content.showUrls.length);
+    for (let content of imageContents) {
+        await DownloadImages(CONFIG.BASE_DIR_RES, content.showUrls.map(item => item.showUrl));
+    };
 
-    promisify(fs.writeFile)(filePath, html, {
+    await promisify(fs.writeFile)(filePath, html, {
         encoding: "utf8"
     });
 }
@@ -59,9 +60,9 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
 async function saveCategory(category: Category) {
     logger.debug(`${category.name} > 准备下载`);
     const content = await DownloadContent(CONFIG, category.id);
-    saveToHtml(content)
+    await saveToHtml(content)
     logger.debug(`${category.name} > 下载完成`);
-    await delay(3 * 1000);
+    await delay(3 * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
     await promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`), JSON.stringify(content));
     if (category.children && category.children.length) {
         for (let child of category.children) {
