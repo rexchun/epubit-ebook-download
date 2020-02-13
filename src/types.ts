@@ -6,7 +6,8 @@ export interface Config {
     BASE_DIR_RAW: string,
     BASE_DIR_HTML: string,
     BASE_DIR_RES: string,
-    logger: Log
+    logger: Log,
+    delay: number
 }
 export interface Category {
     catalogPath: string,

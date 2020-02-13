@@ -1,6 +1,7 @@
 import { Config } from "./types";
 import { question, CreateDir } from "./lib"
 import { Log } from "./logger"
+import { config as PkgConfig } from "../package.json";
 
 export const CONFIG: Config = {
     cookie: "",
@@ -8,11 +9,13 @@ export const CONFIG: Config = {
     BASE_DIR_RAW: "",
     BASE_DIR_HTML: "",
     BASE_DIR_RES: "",
-    logger: new Log("default")
+    logger: new Log("default"),
+    delay: PkgConfig.delay
 };
 
 export async function init() {
-    CONFIG.cookie = await question("请输入Cookie: ")
+    
+    CONFIG.cookie = PkgConfig.cookie || await question("请输入Cookie: ")
     CONFIG.projectId = await question("请输入书籍的 Project Id: ");
 
     const BASE_DIR = `books/${CONFIG.projectId}`;

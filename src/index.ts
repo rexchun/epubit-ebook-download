@@ -5,8 +5,6 @@ import { promisify } from "util"
 import { GetCategory, DownloadContent, delay, CreateDir, DownloadImages } from "./lib";
 import { CONFIG, init } from "./config"
 
-
-
 (async function run() {
     await init();
     console.log("config: \n" + JSON.stringify(CONFIG, null, "\t"));
@@ -66,7 +64,7 @@ async function saveCategory(category: Category) {
     const content = await DownloadContent(CONFIG, category.id);
     await saveToHtml(content)
     CONFIG.logger.debug(`${category.name} > 下载完成`);
-    await delay(3 * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
+    await delay(CONFIG.delay * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
     await promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`), JSON.stringify(content));
     if (category.children && category.children.length) {
         for (let child of category.children) {
