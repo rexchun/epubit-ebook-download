@@ -40,7 +40,7 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
         }
         console.warn("invalid type: " + content.type);
         return `<p>invalid type: ${content.type}</p>`;
-    }).join(`<br class="split" />\n`);
+    }).join(`\n`);
 
     html += `\n\r\n<p class="epubit-contents-id" style="display: none">${JSON.stringify({ index: response.data.folder.index, parentId: response.data.folder.parentId, id: response.data.folder.id })}</p>`;
 
