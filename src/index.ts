@@ -17,7 +17,7 @@ import { CONFIG, init } from "./config"
     const firstPlaceholderCategory: Category = null;
     r1.data.reduce((prev, next) => {
         return prev.then(prevCategory => {
-            CONFIG.logger.debug(`章节(${(prevCategory || {}).name}) > 下载完成`)
+            CONFIG.logger.debug(`章节(${(prevCategory || {}).name}) > 下载完成\n`)
             CONFIG.logger.debug(`章节(${next.name}) > 准备下载`)
             return saveCategory(next).then(() => next);
         }).catch(() => {
@@ -48,7 +48,12 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
 
     const imageContents = response.data.contents.filter(content => content.showUrls && content.showUrls.length);
     for (let content of imageContents) {
-        await DownloadImages(CONFIG.BASE_DIR_RES, content.showUrls.map(item => item.showUrl));
+        await DownloadImages(CONFIG.BASE_DIR_RES, content.showUrls.map(item => {
+            if (item.showUrl.includes("?x-oss-process=image/watermark")) {
+                return item.showUrl.split("?")[0];
+            }
+            return item.showUrl;
+        }));
     };
 
     await promisify(fs.writeFile)(filePath, html, {
