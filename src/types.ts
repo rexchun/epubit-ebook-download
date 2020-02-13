@@ -1,9 +1,12 @@
+import { Log } from "./logger";
+
 export interface Config {
     cookie: string,
     projectId: string,
     BASE_DIR_RAW: string,
     BASE_DIR_HTML: string,
-    BASE_DIR_RES: string
+    BASE_DIR_RES: string,
+    logger: Log
 }
 export interface Category {
     catalogPath: string,

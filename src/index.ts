@@ -3,16 +3,13 @@ import * as fs from "fs";
 import * as path from "path";
 import { promisify } from "util"
 import { GetCategory, DownloadContent, delay, CreateDir, DownloadImages } from "./lib";
-import { Log } from "./logger"
 import { CONFIG, init } from "./config"
 
 
-let logger = new Log(CONFIG.projectId);
 
 (async function run() {
     await init();
-    console.log("config: " + JSON.stringify(CONFIG));
-    logger = new Log(CONFIG.projectId);
+    console.log("config: \n" + JSON.stringify(CONFIG, null, "\t"));
 
     const r1 = await GetCategory(CONFIG);
     promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, "categories.json"), JSON.stringify(r1));
@@ -20,8 +17,8 @@ let logger = new Log(CONFIG.projectId);
     const firstPlaceholderCategory: Category = null;
     r1.data.reduce((prev, next) => {
         return prev.then(prevCategory => {
-            logger.debug(`章节(${(prevCategory || {}).name}) > 下载完成`)
-            logger.debug(`章节(${next.name}) > 准备下载`)
+            CONFIG.logger.debug(`章节(${(prevCategory || {}).name}) > 下载完成`)
+            CONFIG.logger.debug(`章节(${next.name}) > 准备下载`)
             return saveCategory(next).then(() => next);
         }).catch(() => {
             return saveCategory(next);
@@ -47,7 +44,7 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
         return `<p>invalid type: ${content.type}</p>`;
     }).join(`<br class="split" />\n`);
 
-    html += `\n\r\n<p class="epubit-contents-id" style="display: none">${JSON.stringify({ parentId: response.data.folder.parentId, id: response.data.folder.id })}</p>`;
+    html += `\n\r\n<p class="epubit-contents-id" style="display: none">${JSON.stringify({ index: response.data.folder.index, parentId: response.data.folder.parentId, id: response.data.folder.id })}</p>`;
 
     const imageContents = response.data.contents.filter(content => content.showUrls && content.showUrls.length);
     for (let content of imageContents) {
@@ -60,10 +57,10 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
 }
 
 async function saveCategory(category: Category) {
-    logger.debug(`${category.name} > 准备下载`);
+    CONFIG.logger.debug(`${category.name} > 准备下载`);
     const content = await DownloadContent(CONFIG, category.id);
     await saveToHtml(content)
-    logger.debug(`${category.name} > 下载完成`);
+    CONFIG.logger.debug(`${category.name} > 下载完成`);
     await delay(3 * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
     await promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`), JSON.stringify(content));
     if (category.children && category.children.length) {

@@ -1,12 +1,14 @@
 import { Config } from "./types";
 import { question, CreateDir } from "./lib"
+import { Log } from "./logger"
 
 export const CONFIG: Config = {
     cookie: "",
     projectId: "",
     BASE_DIR_RAW: "",
     BASE_DIR_HTML: "",
-    BASE_DIR_RES: ""
+    BASE_DIR_RES: "",
+    logger: new Log("default")
 };
 
 export async function init() {
@@ -17,6 +19,7 @@ export async function init() {
     CONFIG.BASE_DIR_RAW = `${BASE_DIR}/raw`;
     CONFIG.BASE_DIR_HTML = `${BASE_DIR}/html`;
     CONFIG.BASE_DIR_RES = `${BASE_DIR}/res`;
+    CONFIG.logger = new Log(CONFIG.projectId);
 
     await CreateDir(CONFIG.BASE_DIR_RAW);
     await CreateDir(CONFIG.BASE_DIR_HTML);

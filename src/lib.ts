@@ -5,9 +5,8 @@ import * as fs from "fs";
 import { parse as parseUrl } from "url";
 import * as path from "path";
 import { promisify } from "util"
-import { Log } from "./logger";
+import { CONFIG } from "./config";
 
-const logger = new Log("lib");
 
 export async function GetCategory(auth: Config): Promise<ResponseResult<Category[]>> {
     return axios.get("https://pubcloud.ptpress.cn/pubcloud/content/front/ebookFolderTree", {
@@ -54,16 +53,16 @@ export async function DownloadImage(baseDir: string, url: string): Promise<void>
         const parsed = parseUrl(url);
         const fileDir = path.join(baseDir, path.dirname(parsed.pathname));
         await CreateDir(fileDir);
-        logger.debug(`准备下载文件: ${url}`);
+        CONFIG.logger.debug(`准备下载文件: ${url}`);
         const response = await axios.get(url, {
             responseType: "arraybuffer"
         });
         await promisify(fs.writeFile)(path.join(baseDir, parsed.pathname), response.data, {
             encoding: "utf8"
         });
-        logger.debug(`文件下载成功: ${url}`);
+        CONFIG.logger.debug(`文件下载成功: ${url}`);
     } catch (ex) {
-        logger.warn(`文件 ${url} 下载失败: `, ex.message);
+        CONFIG.logger.debug(`文件 ${url} 下载失败: `, ex.message);
     }
 }
 export async function DownloadImages(baseDir: string, urls: string[]): Promise<void> {
