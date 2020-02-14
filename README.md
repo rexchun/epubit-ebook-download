@@ -11,6 +11,10 @@
 4. `logs/` 目录下有下载进度日志, 下载内容会保存到 `books/` 目录.
 ![result](./res/result.png)
 
+## 批量下载
+
+1. 将 cookie 和 project id 维护到 `package.json` 的 `config` 配置节, 然后执行 `npm run download` 即可.
+
 ## 阅读
 
-1. 执行 `npm run reader`, 然后使用浏览器访问 `http://localhost:8002/reader/` 即可.
+1. 执行 `npm run reader`, 然后使用浏览器访问 `http://localhost:8002/reader/` 即可. (阅读的前提是 `/books` 目录下有下载好的书籍)

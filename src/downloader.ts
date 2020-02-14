@@ -26,7 +26,7 @@ import { config as PkgConfig } from "../package.json"
 
 async function download(projectId?: string) {
     await init(projectId);
-    console.log(`准备下载 ${projectId}`);
+    console.log(`${projectId} > 准备下载 `);
 
     const r1 = await GetCategory(CONFIG);
     promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, "categories.json"), JSON.stringify(r1));
@@ -43,7 +43,7 @@ async function download(projectId?: string) {
     }, Promise.resolve(firstPlaceholderCategory));
 
     promise.then(() => {
-        console.log(`${CONFIG.projectId} 下载完成`);
+        console.log(`${CONFIG.projectId} > 下载完成`);
     });
     return promise;
 }
