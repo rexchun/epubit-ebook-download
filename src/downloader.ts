@@ -24,7 +24,24 @@ import { CONFIG, init } from "./config"
     }, Promise.resolve(firstPlaceholderCategory));
 })();
 
-
+async function saveCategory(category: Category) {
+    CONFIG.logger.debug(`${category.name} > 准备下载`);
+    const filePath = path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`);
+    if (fs.existsSync(filePath)) {
+        CONFIG.logger.debug(`${category.name} > 本地存在`);
+    } else {
+        const content = await DownloadContent(CONFIG, category.id);
+        await saveToHtml(content)
+        CONFIG.logger.debug(`${category.name} > 下载完成`);
+        await promisify(fs.writeFile)(filePath, JSON.stringify(content));
+        await delay(CONFIG.delay * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
+    }
+    if (category.children && category.children.length) {
+        for (let child of category.children) {
+            await saveCategory(child);
+        }
+    }
+}
 async function saveToHtml(response: ResponseResult<{ contents: Content[], folder: Category }>): Promise<void> {
     let fileName = response.data.folder.name.replace(/[\/\?\*&!@#$]/g, "_");
     if (/^第\d+章 /.test(fileName)) {
@@ -57,18 +74,4 @@ async function saveToHtml(response: ResponseResult<{ contents: Content[], folder
     await promisify(fs.writeFile)(filePath, html, {
         encoding: "utf8"
     });
-}
-
-async function saveCategory(category: Category) {
-    CONFIG.logger.debug(`${category.name} > 准备下载`);
-    const content = await DownloadContent(CONFIG, category.id);
-    await saveToHtml(content)
-    CONFIG.logger.debug(`${category.name} > 下载完成`);
-    await delay(CONFIG.delay * 1000); //延迟3秒再执行下个章节下载, 防止过快请求站点屏蔽.
-    await promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, `${category.id}.json`), JSON.stringify(content));
-    if (category.children && category.children.length) {
-        for (let child of category.children) {
-            await saveCategory(child);
-        }
-    }
 }
