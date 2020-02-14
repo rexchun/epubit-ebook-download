@@ -2,40 +2,39 @@
   <div class="container-fluid">
     <div class="col-sm-3">
       <ul class="book-category overscroll" :style="`height: ${styles.winHeight}px`">
-        <category
+        <table-contents
           v-for="category in data.categoryTree"
           :category="category"
           :key="category.id"
-          @select-category="onSelectCategory"
         />
       </ul>
     </div>
     <div class="col-sm-9 overscroll" :style="`height: ${styles.winHeight}px`">
       <chapter-content
-        v-if="data.selectedCategory"
+        v-if="shared.category.selected"
         :book-id="bookId"
-        :category="data.selectedCategory"
-        :key="data.selectedCategory.id"
+        :key="shared.category.selected.id"
       />
     </div>
   </div>
 </template>
 <script>
 import { getBookCategoryTree } from "../services/api";
-import Category from "../components/Category";
+import TableContents from "../components/TableContents";
 import ChapterContent from "../components/ChapterContent";
+import { SharedInfo } from "../services/store";
 
 export default {
   data() {
     return {
       bookId: this.$route.params.id,
       data: {
-        categoryTree: [],
-        selectedCategory: null
+        categoryTree: []
       },
       styles: {
         winHeight: window.innerHeight
-      }
+      },
+      shared: SharedInfo
     };
   },
   mounted() {
@@ -43,21 +42,27 @@ export default {
   },
   methods: {
     loadCategoryTree() {
-      getBookCategoryTree(this.bookId).then(
-        response => (this.data.categoryTree = response.data)
-      );
-    },
-    onSelectCategory(category) {
-      this.data.selectedCategory = category;
+      getBookCategoryTree(this.bookId).then(response => {
+        response.data.forEach(item => this.attachData(item));
+        this.data.categoryTree = response.data;
+      });
     },
     setHeight() {
       window.addEventListener("resize", () => {
         this.styles.winHeight = window.innerHeight - 10;
       });
+    },
+    attachData(tree) {
+      if (tree && tree.id) {
+        tree.selected = false;
+        if (tree.children && tree.children.length) {
+          tree.children.forEach(child => this.attachData(child));
+        }
+      }
     }
   },
   components: {
-    category: Category,
+    "table-contents": TableContents,
     "chapter-content": ChapterContent
   }
 };

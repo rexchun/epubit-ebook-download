@@ -5,25 +5,14 @@
 </template>
 
 <script>
+import { SharedInfo } from "./services/store";
 export default {
   name: "App",
+  data() {
+    return {
+      shared: SharedInfo
+    };
+  },
   mounted() {}
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.book-category {
-  cursor: pointer;
-}
-.overscroll {
-  overflow: scroll;
-}
-img {
-  max-width: 90%;
-}
-</style>

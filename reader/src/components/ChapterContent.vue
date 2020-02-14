@@ -1,4 +1,5 @@
 <template>
+  <!-- 章节内容 -->
   <div>
     <content-item v-for="item in data.contents" :content="item" :key="item.id" />
   </div>
@@ -6,12 +7,10 @@
 <script>
 import { getChapterContent } from "../services/api";
 import ContentItem from "./ContentItem";
+import { SharedInfo } from "../services/store";
 export default {
   props: {
     bookId: {
-      required: true
-    },
-    category: {
       required: true
     }
   },
@@ -19,20 +18,23 @@ export default {
     return {
       data: {
         contents: []
-      }
+      },
+      shared: SharedInfo
     };
   },
   methods: {
     loadContent() {
-      getChapterContent(this.bookId, this.category.id).then(
+      getChapterContent(this.bookId, this.shared.category.selected.id).then(
         response => (this.data.contents = response.data.contents)
       );
     }
   },
   watch: {
-    "category.id": {
-      handler() {
-        this.loadContent();
+    "shared.category.selected.id": {
+      handler(newVal) {
+        if (newVal) {
+          this.loadContent();
+        }
       },
       immediate: true
     }

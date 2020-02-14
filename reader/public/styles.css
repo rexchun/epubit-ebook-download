@@ -1,0 +1,20 @@
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .book-category {
+    cursor: pointer;
+  }
+  .overscroll {
+    overflow: scroll;
+  }
+  img.center {
+    max-width: 90%;
+    display: inline-block;
+    margin: 10px auto;
+  }
+  ul li.selected >div {
+    color: #0094ff;
+  }

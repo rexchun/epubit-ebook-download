@@ -1,7 +1,9 @@
 <template>
+  <!-- 一条内容 -->
   <div>
     <div v-if="content.type === 'singleImg'">
       <img
+        class="center"
         v-for="img in content.showUrls"
         :key="img.key"
         :src="`${booksRootDir}${content.projectId}/res/${img.key}`"
