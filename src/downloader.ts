@@ -2,18 +2,37 @@ import { ResponseResult, Category, Content } from "./types";
 import * as fs from "fs";
 import * as path from "path";
 import { promisify } from "util"
-import { GetCategory, DownloadContent, delay, CreateDir, DownloadImages } from "./lib";
+import { GetCategory, DownloadContent, delay, DownloadImages } from "./lib";
 import { CONFIG, init } from "./config"
+import { config as PkgConfig } from "../package.json"
 
 (async function run() {
-    await init();
-    console.log("config: \n" + JSON.stringify(CONFIG, null, "\t"));
+    if (PkgConfig.projectIds && PkgConfig.projectIds.length) {
+        console.log("准备批量下载");
+        PkgConfig.projectIds.reduce((prev, next) => {
+            return prev.then(() => {
+                return download(next);
+            }).catch((error: any) => {
+                console.warn("发生异常: ", error);
+                return download(next);
+            });
+        }, Promise.resolve(undefined)).then(() => {
+            console.log("批量下载完成");
+        });
+    } else {
+        await download();
+    }
+})();
+
+async function download(projectId?: string) {
+    await init(projectId);
+    console.log(`准备下载 ${projectId}`);
 
     const r1 = await GetCategory(CONFIG);
     promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, "categories.json"), JSON.stringify(r1));
 
     const firstPlaceholderCategory: Category = null;
-    r1.data.reduce((prev, next) => {
+    const promise = r1.data.reduce((prev, next) => {
         return prev.then(prevCategory => {
             CONFIG.logger.debug(`章节(${(prevCategory || {}).name}) > 下载完成\n`)
             CONFIG.logger.debug(`章节(${next.name}) > 准备下载`)
@@ -22,7 +41,12 @@ import { CONFIG, init } from "./config"
             return saveCategory(next);
         });
     }, Promise.resolve(firstPlaceholderCategory));
-})();
+
+    promise.then(() => {
+        console.log(`${CONFIG.projectId} 下载完成`);
+    });
+    return promise;
+}
 
 async function saveCategory(category: Category) {
     CONFIG.logger.debug(`${category.name} > 准备下载`);

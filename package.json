@@ -32,6 +32,7 @@
   },
   "config": {
     "delay": 10,
-    "cookie": "acw_tc=2760825115814724331088715e9247d57b91ad3297da448c8363fe9e6be570; SESSION=8405118f-62f3-4f4e-abd6-35f40c59f29c"
+    "cookie": "",
+    "projectIds": [ ]
   }
 }

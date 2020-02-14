@@ -13,10 +13,10 @@ export const CONFIG: Config = {
     delay: PkgConfig.delay
 };
 
-export async function init() {
-    
+export async function init(projectId?: string) {
+
     CONFIG.cookie = PkgConfig.cookie || await question("请输入Cookie: ")
-    CONFIG.projectId = await question("请输入书籍的 Project Id: ");
+    CONFIG.projectId = projectId || await question("请输入书籍的 Project Id: ");
 
     const BASE_DIR = `books/${CONFIG.projectId}`;
     CONFIG.BASE_DIR_RAW = `${BASE_DIR}/raw`;
