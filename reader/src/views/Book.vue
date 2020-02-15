@@ -18,7 +18,7 @@
     </div>
     <div
       class="table-of-contencts overscroll"
-      :style="`height: ${styles.winHeight - 30}px`"
+      :style="`max-height: ${styles.winHeight - 30}px`"
       v-show="shared.category.showToC"
     >
       <ul class="book-category">

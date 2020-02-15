@@ -36,7 +36,6 @@ export default {
     onSelectCategory(category) {
       this.shared.category.selected = category;
     }
-  },
-  components: {}
+  }
 };
 </script>
