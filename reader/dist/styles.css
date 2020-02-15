@@ -51,10 +51,14 @@ ul > li {
     padding: 10px 5px;
     width: 30%;
     min-width: 300px;
-    border: 1px solid gray;
     border-radius: 5px;
     margin-top: 1em;
+    box-shadow: #eee 5px 5px 5px;
   }
   .chapter-content{
     overflow: hidden;
+  }
+  .chapter-content code {
+    white-space: pre;
+    overflow: scroll;
   }
