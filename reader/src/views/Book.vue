@@ -23,7 +23,7 @@
     >
       <ul class="book-category">
         <table-contents
-          v-for="category in data.categoryTree"
+          v-for="category in data.categoryRootTree.children"
           :category="category"
           :key="category.id"
         />
@@ -49,7 +49,9 @@ export default {
     return {
       bookId: this.$route.params.id,
       data: {
-        categoryTree: [],
+        categoryRootTree: {
+          children: []
+        },
         flattedCategory: []
       },
       styles: {
@@ -69,8 +71,8 @@ export default {
           item.selected = false;
           this.data.flattedCategory.push(item);
         });
-        this.data.categoryTree = response.data;
-        this.shared.category.selected = this.data.categoryTree[0];
+        this.data.categoryRootTree.children = response.data;
+        this.initReadProgress();
       });
     },
     setHeight() {
@@ -92,6 +94,7 @@ export default {
         return;
       }
       this.shared.category.selected = this.data.flattedCategory[index - 1];
+      this.saveReadProgress(this.shared.category.selected.id);
     },
     nextChapter() {
       let current = this.shared.category.selected;
@@ -100,6 +103,27 @@ export default {
         return;
       }
       this.shared.category.selected = this.data.flattedCategory[index + 1];
+      this.saveReadProgress(this.shared.category.selected.id);
+    },
+    initReadProgress() {
+      const localData = JSON.parse(localStorage.getItem(this.bookId) || "{}");
+      if (!localData.progress) {
+        this.shared.category.selected = this.data.categoryRootTree.children[0];
+        return;
+      }
+      iterableTree(this.data.categoryRootTree, item => {
+        if (item.id === localData.progress) {
+          this.shared.category.selected = item;
+        }
+      });
+    },
+    saveReadProgress(id) {
+      localStorage.setItem(
+        this.bookId,
+        JSON.stringify({
+          progress: id
+        })
+      );
     }
   },
   components: {
