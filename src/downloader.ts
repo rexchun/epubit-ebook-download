@@ -26,7 +26,7 @@ import { config as PkgConfig } from "../package.json"
 
 async function download(projectId?: string) {
     await init(projectId);
-    console.log(`${projectId} > 准备下载 `);
+    console.log(`${CONFIG.projectId} > 准备下载`);
 
     const r1 = await GetCategory(CONFIG);
     promisify(fs.writeFile)(path.join(CONFIG.BASE_DIR_RAW, "categories.json"), JSON.stringify(r1));
