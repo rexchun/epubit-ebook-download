@@ -2,6 +2,8 @@
 
 此项目代码仅供个人学习参考, 严禁用于违法传播图书等. 
 
+Fork from [alanwei43/epubit-ebook-download](https://github.com/alanwei43/epubit-ebook-download
+
 ## 下载方法
 
 1. 将本项目clone到本地, 执行 `npm run install`.
