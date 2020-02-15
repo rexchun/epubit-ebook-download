@@ -25,3 +25,6 @@ export function iterableTree(tree, callback) {
         tree.children.forEach(t => iterableTree(t, callback));
       }
 }
+export function getBookInfo(id){
+    return getJSON(`/api/book-info/${id}`);
+}
