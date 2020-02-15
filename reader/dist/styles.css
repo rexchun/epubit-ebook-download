@@ -56,5 +56,5 @@ ul > li {
     margin-top: 1em;
   }
   .chapter-content{
-    /* margin-top: 50px; */
+    overflow: hidden;
   }
