@@ -15,7 +15,7 @@
 ## 批量下载
 
 1. 将 cookie 和 project id 维护到 `package.json` 的 `config` 配置节, 然后执行 `npm run download` 即可.
-![batch config](./res/batch-config.png)
+![batch config](./res/batch-config.PNG)
 
 ## 阅读
 
