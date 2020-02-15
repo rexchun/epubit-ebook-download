@@ -1,9 +1,19 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+ul {
+  margin-left: 1em;
+}
+ul > li {
+  margin-left: 1em;;
+}
 
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
+}
   .book-category {
     cursor: pointer;
   }
@@ -16,5 +26,35 @@
     margin: 10px auto;
   }
   ul li.selected >div {
-    color: #0094ff;
+    color: yellow;
+  }
+
+  .functions{
+    position: fixed;
+    z-index: 3;
+    right: 10px;
+    bottom: 10px;
+  }
+  .functions ul {
+    margin: 0;
+    list-style: none;
+    opacity: .8;
+  }
+  .functions ul li {
+    margin: 10px 0;
+  }
+  .table-of-contencts{
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(0, 150, 255, .9);
+    color: white;
+    padding: 10px 5px;
+    width: 30%;
+    min-width: 300px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 1em;
+  }
+  .chapter-content{
+    /* margin-top: 50px; */
   }

@@ -15,3 +15,13 @@ export function getBookCategoryTree(bookId) {
 export function getChapterContent(bookId, contentId) {
     return getJSON(`${BOOKS_ROOT_DIR}${bookId}/raw/${contentId}.json`);
 }
+
+export function iterableTree(tree, callback) {
+    if (!tree.children) {
+        tree.children = [];
+      }
+      callback(tree);
+      if (tree.children.length) {
+        tree.children.forEach(t => iterableTree(t, callback));
+      }
+}
