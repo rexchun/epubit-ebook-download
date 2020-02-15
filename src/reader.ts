@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const app = express();
-const PORT: Number = parseInt(process.env.PORT) || 8002;
+const PORT: Number = 8002;
 
 app.use("/books", express.static("./books/"));
 app.use("/reader", express.static("./reader/dist/"));
@@ -24,5 +24,5 @@ app.get("/api/books", (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`listen ${PORT}`);
+    console.log(`访问 http://localhost:${PORT}/reader 阅读电子书`);
 });
