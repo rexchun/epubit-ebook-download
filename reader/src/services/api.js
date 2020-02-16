@@ -57,8 +57,12 @@ export function getBookInfo(id) {
     });
     return promise;
 }
-export function getRecentBooks() {
-    return Promise.resolve(getBooksProgress().sort((prev, next) => next.date - prev.date).slice(0, 5));
+export function getRecentBooks(count) {
+    count = parseInt(count);
+    if(isNaN(count) || count <= 0){
+        count = 5;
+    }
+    return Promise.resolve(getBooksProgress().sort((prev, next) => next.date - prev.date).slice(0, count));
 }
 
 /**
