@@ -39,7 +39,12 @@
   </div>
 </template>
 <script>
-import { getBookCategoryTree, iterableTree } from "../services/api";
+import {
+  getBookCategoryTree,
+  iterableTree,
+  getBooksProgress,
+  updateBooksProgress
+} from "../services/api";
 import TableContents from "../components/TableContents";
 import ChapterContent from "../components/ChapterContent";
 import { SharedInfo } from "../services/store";
@@ -62,6 +67,7 @@ export default {
   },
   mounted() {
     this.loadCategoryTree();
+    console.log("read book: ", this.bookId);
   },
   methods: {
     loadCategoryTree() {
@@ -118,12 +124,25 @@ export default {
       });
     },
     saveReadProgress(id) {
-      localStorage.setItem(
-        this.bookId,
-        JSON.stringify({
-          progress: id
-        })
-      );
+      const currentProgress = {
+        bookId: this.bookId,
+        chapterId: id,
+        date: Date.now()
+      };
+      const progress = getBooksProgress();
+      let hasFound = false;
+      for (let index = 0; index < progress.length; index++) {
+        const item = progress[index];
+        if (item.bookId === currentProgress.bookId) {
+          progress[index] = currentProgress;
+          hasFound = true;
+          break;
+        }
+      }
+      if(!hasFound){
+        progress.push(currentProgress);
+      }
+      updateBooksProgress(progress);
     }
   },
   components: {
