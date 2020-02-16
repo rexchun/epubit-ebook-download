@@ -16,10 +16,17 @@ app.get("/api/books", (req, res) => {
         .readdirSync("./books", {
             encoding: "utf8"
         })
-        .filter(b => fs.statSync(path.join("books", b)).isDirectory())
         .map(b => ({
+            stat: fs.statSync(path.join("books", b)),
             id: b,
             name: b
+        }))
+        .filter(b => b.stat.isDirectory())
+        .sort((prev, next) => prev.stat.mtime.getTime() - next.stat.mtime.getTime())
+        .map(b => ({
+            id: b.id,
+            name: b.name,
+            mtme: b.stat.mtime.toISOString()
         }));
     res.json(books);
 });
