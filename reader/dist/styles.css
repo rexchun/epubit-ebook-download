@@ -28,7 +28,9 @@ ul > li {
   ul li.selected >div {
     color: yellow;
   }
-
+.books-list ol{
+  margin-left: 2em;
+}
   .functions{
     position: fixed;
     z-index: 3;

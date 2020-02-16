@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="books-list">
     <h3>书籍列表</h3>
-    <ul>
+    <ol>
       <book-item v-for="book in books.data" :key="book.id" :book-id="book.id" />
-    </ul>
+    </ol>
   </div>
 </template>
 <script>
