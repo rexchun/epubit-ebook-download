@@ -100,7 +100,7 @@ export default {
         return;
       }
       this.shared.category.selected = this.data.flattedCategory[index - 1];
-      this.saveReadProgress(this.shared.category.selected.id);
+      this.saveReadProgress(this.shared.category.selected);
     },
     nextChapter() {
       let current = this.shared.category.selected;
@@ -109,25 +109,27 @@ export default {
         return;
       }
       this.shared.category.selected = this.data.flattedCategory[index + 1];
-      this.saveReadProgress(this.shared.category.selected.id);
+      this.saveReadProgress(this.shared.category.selected);
     },
     initReadProgress() {
-      const localData = JSON.parse(localStorage.getItem(this.bookId) || "{}");
-      if (!localData.progress) {
+      const localData = getBooksProgress().filter(item => item.bookId === this.bookId)[0];
+
+      if (!localData || !localData.chapterId) {
         this.shared.category.selected = this.data.categoryRootTree.children[0];
         return;
       }
       iterableTree(this.data.categoryRootTree, item => {
-        if (item.id === localData.progress) {
+        if (item.id === localData.chapterId) {
           this.shared.category.selected = item;
         }
       });
     },
-    saveReadProgress(id) {
+    saveReadProgress(chapter) {
       const currentProgress = {
         bookId: this.bookId,
-        chapterId: id,
-        date: Date.now()
+        chapterId: chapter.id,
+        chapterName: chapter.name,
+        date: Date.now(),
       };
       const progress = getBooksProgress();
       let hasFound = false;
@@ -139,7 +141,7 @@ export default {
           break;
         }
       }
-      if(!hasFound){
+      if (!hasFound) {
         progress.push(currentProgress);
       }
       updateBooksProgress(progress);

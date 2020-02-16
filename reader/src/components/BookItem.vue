@@ -1,7 +1,5 @@
 <template>
-  <li>
-    <router-link :to="`/book/${bookId}`">{{book.ubookName || bookId}} - {{book.nickName}}</router-link>
-  </li>
+  <router-link :to="`/book/${bookId}`">{{book.ubookName || bookId}} - {{book.nickName}}</router-link>
 </template>
 <script>
 import { getBookInfo } from "../services/api";

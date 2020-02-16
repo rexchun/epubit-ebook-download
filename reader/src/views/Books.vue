@@ -3,12 +3,16 @@
     <template v-if="books.recent.length">
       <h3>最近阅读</h3>
       <ol>
-        <book-item v-for="book in books.recent" :key="book.bookId" :book-id="book.bookId" />
+        <li v-for="book in books.recent" :key="book.bookId">
+          <book-item :book-id="book.bookId" /> ( {{book.chapterName}} )
+        </li>
       </ol>
     </template>
     <h3>书籍列表</h3>
     <ol>
-      <book-item v-for="book in books.data" :key="book.id" :book-id="book.id" />
+      <li v-for="book in books.data" :key="book.id">
+        <book-item :book-id="book.id" />
+      </li>
     </ol>
   </div>
 </template>
